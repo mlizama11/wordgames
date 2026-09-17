@@ -3,16 +3,26 @@
   "version": "1.0.0",
   "main": "index.ts",
   "dependencies": {
-    "expo": "~57.0.22",
+    "@hookform/resolvers": "^5.9.1",
+    "expo": "^57.0.23",
+    "expo-secure-store": "~57.0.4",
     "expo-status-bar": "~57.0.1",
     "react": "19.2.3",
-    "react-native": "0.86.3"
+    "react-hook-form": "^7.88.0",
+    "react-native": "0.86.3",
+    "react-native-safe-area-context": "~5.7.0",
+    "zod": "^4.6.5"
   },
   "devDependencies": {
     "@types/react": "~19.2.2",
+    "prettier": "^3.9.6",
     "typescript": "~6.0.3"
   },
   "scripts": {
+    "format": "prettier --write App.tsx src server/src server/*.json server/*.md README.md app.json docker-compose.yml",
+    "server:build": "npm --prefix server run build",
+    "server:dev": "npm --prefix server run dev",
+    "server:migrate": "npm --prefix server run migrate",
     "start": "expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
