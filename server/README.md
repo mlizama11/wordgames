@@ -81,3 +81,7 @@ npm run build
 ```
 
 For production, provide a managed PostgreSQL URL, a generated `JWT_SECRET` of at least 32 characters, a restricted `CORS_ORIGIN`, HTTPS termination, and a proper secrets manager. Run `npm run server:build` and start the generated `dist/server.js` process.
+
+Production configuration also requires `ADMIN_API_KEY` and rejects localhost
+values in `CORS_ORIGIN`. The development Docker Compose password must never be
+reused for a production database.

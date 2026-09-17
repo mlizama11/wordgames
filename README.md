@@ -27,6 +27,8 @@ npm run server:dev
 ```
 
 Set `EXPO_PUBLIC_API_URL` to the API's reachable address when running the mobile app. For a physical device, use your computer's LAN IP instead of `localhost`.
+Production builds require `EXPO_PUBLIC_API_URL`; use an HTTPS API URL for
+production rather than the development fallback.
 
 Examples:
 
@@ -68,3 +70,8 @@ npm run server:build
 The API implementation, admin workflow, and deployment notes are in
 [server/README.md](server/README.md). Use a managed PostgreSQL instance, HTTPS,
 restricted CORS, and a secrets manager before deploying publicly.
+
+The mobile `npm audit` currently reports a moderate transitive Expo toolchain
+finding in `uuid`; the available automated fix requires a breaking Expo
+downgrade. Do not use `npm audit fix --force`; review this dependency again
+when upgrading Expo.
