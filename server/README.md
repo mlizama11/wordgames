@@ -7,14 +7,18 @@ Fastify + PostgreSQL authentication service for the Expo app.
 ```bash
 cp .env.example .env
 docker compose up -d postgres
-npm run server:migrate
-npm run server:dev
+npm run migrate
+npm run dev
 ```
 
 The API listens on `http://localhost:4000`.
 
 Set `TRUST_PROXY=true` only when the API is behind a trusted reverse proxy
 that overwrites forwarding headers.
+
+`ADMIN_API_KEY` is optional for local development, but required to use the
+admin routes. Set it to a random value of at least 32 characters. The server
+does not expose admin routes successfully when this key is missing.
 
 - Open [http://localhost:4000](http://localhost:4000) for the browser status page.
 - Open [http://localhost:4000/health](http://localhost:4000/health) for the machine-readable health check.
@@ -56,6 +60,10 @@ curl -X DELETE -H "X-Admin-Key: $ADMIN_API_KEY" \
 The seeded catalog contains a month of sample clues. Add future content before
 each release day so the player endpoint always has a puzzle available.
 
+The player endpoint uses PostgreSQL `CURRENT_DATE`. Keep the database timezone
+and your publishing schedule aligned so the daily puzzle changes at the
+intended midnight.
+
 ## Auth design
 
 - Passwords are hashed with Argon2id and never stored or logged in plaintext.
@@ -64,5 +72,12 @@ each release day so the player endpoint always has a puzzle available.
 - Refresh requests rotate the token and revoke the previous token.
 - Auth endpoints have a stricter rate limit than general API traffic.
 - Helmet, CORS, request validation, body limits, and generic error responses are enabled.
+- `/health` checks PostgreSQL connectivity and returns `503` when the database is unavailable.
+
+## Validation
+
+```bash
+npm run build
+```
 
 For production, provide a managed PostgreSQL URL, a generated `JWT_SECRET` of at least 32 characters, a restricted `CORS_ORIGIN`, HTTPS termination, and a proper secrets manager. Run `npm run server:build` and start the generated `dist/server.js` process.

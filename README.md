@@ -1,6 +1,7 @@
-# wordly
+# Wordly
 
-A small Expo + TypeScript word-games app with a production-oriented auth API and a daily clue game.
+An Expo + TypeScript word-games app with a Fastify/PostgreSQL API, authenticated
+daily clues, and server-side completion tracking.
 
 ## Run
 
@@ -10,6 +11,9 @@ npm start
 ```
 
 Then press `i` for the iOS simulator, `a` for Android, or scan the QR code with Expo Go.
+
+The app uses React Hook Form and Zod for form validation, and
+`react-native-safe-area-context` for safe-area handling.
 
 ## Backend
 
@@ -45,10 +49,22 @@ EXPO_PUBLIC_API_URL=http://YOUR_MAC_LAN_IP:4000 npm start
 - Rotating refresh tokens and short-lived access JWTs
 - No raw password is stored locally or on the server
 - Home lobby with streak stats and game cards
-- Playable Daily Clue puzzle with answer feedback
+- Playable Daily Clue puzzle with server-side answer checking
+- PostgreSQL-backed daily clue catalog and per-user completions
+- Protected admin API for adding, editing, listing, and removing clues
 
 Daily Clue content and completion state are served by the authenticated API.
-Add a row to `server/migrations/002_daily_clues.sql` (or a later migration) for
-each production puzzle date before releasing that day.
+The initial catalog is seeded by `server/migrations/003_daily_clue_catalog.sql`.
+Use the admin API documented in [server/README.md](server/README.md) for ongoing
+content changes; do not create a new database migration for every clue.
 
-The API implementation and deployment notes are in [server/README.md](server/README.md). Use a managed PostgreSQL instance, HTTPS, restricted CORS, and a secrets manager before deploying publicly.
+## Validation
+
+```bash
+npx tsc --noEmit
+npm run server:build
+```
+
+The API implementation, admin workflow, and deployment notes are in
+[server/README.md](server/README.md). Use a managed PostgreSQL instance, HTTPS,
+restricted CORS, and a secrets manager before deploying publicly.
